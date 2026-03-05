@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rick and Morty API - Swagger UI</title>
+  <link rel="stylesheet" type="text/css" href="./swagger-ui-dist/swagger-ui.css" />
+  <link rel="icon" type="image/png" href="./swagger-ui-dist/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./swagger-ui-dist/favicon-16x16.png" sizes="16x16" />
+  <style>
+    html
+    {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+    *,
+    *:before,
+    *:after
+    {
+      box-sizing: inherit;
+    }
+
+    body
+    {
+      margin:0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+<div id="swagger-ui"></div>
+
+<script src="./swagger-ui-dist/swagger-ui-bundle.js" charset="UTF-8"> </script>
+<script src="./swagger-ui-dist/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+<script>
+  window.onload = function() {
+    // Begin Swagger UI call region
+    const ui = SwaggerUIBundle({
+      spec: {
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gestión de Reservas",
+    "description": "API para la gestión de recursos y reservas basada en el modelo físico de la base de datos. Permite la administración de espacios y el control de asistencia.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/v1",
+      "description": "Servidor de desarrollo local"
+    }
+  ],
+  "paths": {
+    "/reservas": {
+      "get": {
+        "summary": "Listar todas las reservas",
+        "description": "Recupera la lista completa de reservas del usuario autenticado.",
+        "responses": {
+          "200": {
+            "description": "Lista de reservas obtenida con éxito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reserva"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una nueva reserva",
+        "description": "Registra una nueva reserva en el sistema tras validar disponibilidad y capacidad.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reserva creada con éxito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reserva"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorValidacion"
+          }
+        }
+      }
+    },
+    "/reservas/{id_reserva_local}": {
+      "parameters": [
+        {
+          "name": "id_reserva_local",
+          "in": "path",
+          "required": true,
+          "description": "ID único de la reserva local a consultar o modificar.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Obtener detalle de una reserva",
+        "responses": {
+          "200": {
+            "description": "Detalles de la reserva encontrada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reserva"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "La reserva no existe."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Modificar una reserva existente",
+        "description": "Permite actualizar campos como el motivo o el número de plazas.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reserva actualizada correctamente."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancelar una reserva",
+        "description": "Elimina físicamente el registro de la reserva de la base de datos.",
+        "responses": {
+          "204": {
+            "description": "Reserva eliminada correctamente."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Reserva": {
+        "type": "object",
+        "properties": {
+          "id_reserva_local": {
+            "type": "integer",
+            "example": 101
+          },
+          "id_recurso": {
+            "type": "integer",
+            "example": 1
+          },
+          "id_usuario": {
+            "type": "integer",
+            "example": 2
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-06-01"
+          },
+          "hora_inicio": {
+            "type": "string",
+            "example": "09:00:00"
+          },
+          "hora_fin": {
+            "type": "string",
+            "example": "10:00:00"
+          },
+          "coste": {
+            "type": "number",
+            "format": "float",
+            "example": 15.5
+          },
+          "numero_plazas": {
+            "type": "integer",
+            "example": 4
+          },
+          "motivo": {
+            "type": "string",
+            "maxLength": 20,
+            "example": "Entrenamiento"
+          },
+          "observaciones": {
+            "type": "string",
+            "maxLength": 20,
+            "example": "Confirmada"
+          }
+        }
+      },
+      "ReservaInput": {
+        "type": "object",
+        "required": [
+          "id_recurso",
+          "fecha",
+          "hora_inicio",
+          "hora_fin",
+          "numero_plazas"
+        ],
+        "properties": {
+          "id_recurso": {
+            "type": "integer",
+            "example": 1
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-06-01"
+          },
+          "hora_inicio": {
+            "type": "string",
+            "example": "09:00:00"
+          },
+          "hora_fin": {
+            "type": "string",
+            "example": "10:00:00"
+          },
+          "numero_plazas": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 4
+          },
+          "motivo": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "observaciones": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Error de validación"
+          },
+          "detalles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "campo": {
+                  "type": "string"
+                },
+                "mensaje": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "ErrorValidacion": {
+        "description": "Datos de entrada inválidos.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}, // Path to your OpenAPI YAML file
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ],
+      layout: "StandaloneLayout"
+    });
+    // End Swagger UI call region
+
+    window.ui = ui;
+  };
+</script>
+</body>
+</html>
