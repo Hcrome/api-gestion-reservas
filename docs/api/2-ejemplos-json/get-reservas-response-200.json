@@ -1,0 +1,22 @@
+[
+  {
+    "id_reserva_local": 101,
+    "id_recurso": 1,
+    "fecha": "2026-06-01",
+    "hora_inicio": "09:00:00",
+    "hora_fin": "10:00:00",
+    "numero_plazas": 2,
+    "coste": 15.00,
+    "estado": "confirmada"
+  },
+  {
+    "id_reserva_local": 102,
+    "id_recurso": 2,
+    "fecha": "2026-06-02",
+    "hora_inicio": "16:00:00",
+    "hora_fin": "17:00:00",
+    "numero_plazas": 4,
+    "coste": 20.00,
+    "estado": "pendiente"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "id_reserva_local": 106,
+  "id_usuario": 3,
+  "id_recurso": 2,
+  "fecha": "2026-06-15",
+  "hora_inicio": "10:00:00",
+  "hora_fin": "12:00:00",
+  "numero_plazas": 4,
+  "coste": 20.00,
+  "motivo": "Partido entrenamiento",
+  "observaciones": "Necesitaremos focos",
+  "estado": "confirmada"
+}

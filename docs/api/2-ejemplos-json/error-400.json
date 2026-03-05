@@ -1,0 +1,13 @@
+{
+  "error": "Error de validación en la reserva",
+  "detalles": [
+    {
+      "campo": "fecha",
+      "mensaje": "No se permiten reservas en fechas pasadas"
+    },
+    {
+      "campo": "numero_plazas",
+      "mensaje": "El número de plazas excede la capacidad máxima del recurso (máx: 10)"
+    }
+  ]
+}
